@@ -1,5 +1,8 @@
 ﻿using Microsoft.MixedReality.Toolkit.Input;
 using UnityEngine;
+using Microsoft.MixedReality.Toolkit.Experimental.UI;
+using UnityEngine.EventSystems;
+using System;
 
 namespace Microsoft.MixedReality.Toolkit.Examples.Demos
 {
@@ -9,6 +12,14 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
     {
         public GameObject PrefabToSpawn;
 
+        [SerializeField]
+        private NonNativeKeyboard keyboard;
+
+        private void OnEnable()
+        {
+            keyboard.OnClosed += DisableKeyboard;
+        }
+
         public void Spawn(MixedRealityPointerEventData eventData)
         {
             if (PrefabToSpawn != null)
@@ -17,5 +28,19 @@ namespace Microsoft.MixedReality.Toolkit.Examples.Demos
                 Instantiate(PrefabToSpawn, result.Details.Point, Quaternion.LookRotation(result.Details.Normal));
             }
         }
+
+        public void ShowKeyboard(MixedRealityPointerEventData eventData)
+        {
+            keyboard.PresentKeyboard();
+        
+        }
+
+
+        private void DisableKeyboard(object sender,EventArgs eventargs) 
+        {
+            keyboard.OnClosed -= DisableKeyboard;
+            keyboard.Close();
+        }
+
     }
 }
